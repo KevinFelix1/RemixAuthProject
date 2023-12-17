@@ -1,0 +1,53 @@
+:root {
+    --alertColor: #ff0060;
+    --submitColor: #ffbc66;
+}
+
+.title {
+    font-size: 2rem;
+    text-align: center;
+}
+.box {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+}
+.form {
+    border: 1px dashed black;
+    padding: 5px 10px;
+    height: fit-content;
+}
+.form > .box-input {
+    margin: 15px 0px;
+    display: flex;
+    flex-direction: column;
+}
+.form > .box-input label {
+    font-size: 20px;
+    margin-bottom: 3px;
+}
+.form > .box-input > input {
+    height: 42px;
+    font-size: 14px;
+    padding: 0px 7px;
+    outline-color: blue;
+    border-radius: 3px;
+    border: 1px solid;
+}
+.form > .submit {
+    height: 35px;
+    width: 120px;
+    font-size: 16px;
+    color: white;
+    background-color: var(--submitColor);
+    border: none;
+    border-radius: 5px;
+    transition: filter 500ms ease;
+    /* box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.24);
+    -webkit-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.24);
+    -moz-box-shadow: 1px 3px 5px 1px rgba(0,0,0,0.24); */
+}
+.form > .submit:hover {
+    cursor: pointer;
+    filter: brightness(.8);
+}
