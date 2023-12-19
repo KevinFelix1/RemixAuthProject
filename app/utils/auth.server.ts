@@ -15,13 +15,6 @@ import { sessionStorage } from "./session.server";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import bcrypt from "bcrypt";
-// export async function AuthenticateToken(user: User): Promise<string> {
-//     return `Bearer ${jwt.sign(user, process.env.SECRETKEY as string, {expiresIn: "1h"})}`;
-// };
-
-// export async function isAuthenticated(request: Request, {succesRedirect, failureRedirect}) {
-//     console.log(request);
-// }
 
 class AuthEstrategy {
     private session: SessionStorage;
@@ -74,12 +67,40 @@ class AuthEstrategy {
         const {name, lastname} = user;
         const token = await `Bearer ${jwt.sign({email, name, lastname}, process.env.SECRETKEY as string, {expiresIn: "1h"})}`;
         session.set("authToken", token);
-        return redirect("/dashboard", {
+        if(typeof options.successRedirect !== 'string') {
+            throw new Response("No existe redireccion", {status: 404})
+        }
+        return redirect(options.successRedirect, {
             headers: {
             "Set-Cookie": await this.session.commitSession(session),
             },
         });
+
+    };
+
+    async register(
+        request: Request,
+        options: AuthRedirectOptions
+    ):Promise<any> {
+        const session = await this.session.getSession(
+            request.headers.get("Cookie")
+        );
+        const form = await request.formData();
+        const name = form.get("name") as string;
+        const lastname = form.get("lastname") as string;
+        const email = form.get("email") as string;
+        const password = await bcrypt.hash(form.get("password") as string, 10);
+
+        const response = await axios.post("http://localhost:4000/users", {
+            name,
+            lastname,
+            email,
+            password
+        }).then(response => response.data);
+        console.log(response);
+        return '';
     };
 };
 
-export const Authenticator = new AuthEstrategy(sessionStorage);
+const  Authenticator = new AuthEstrategy(sessionStorage);
+export default Authenticator;

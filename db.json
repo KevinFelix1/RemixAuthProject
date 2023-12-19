@@ -1,5 +1,11 @@
 {
-    "users": [
-        {"id": 1, "name": "Kevin", "lastname": "Felix", "email": "correo@correo.com", "password": "piedra123"}
-    ]
+  "users": [
+    {
+      "name": "kevin",
+      "lastname": "felix",
+      "email": "correo@correo.com",
+      "password": "$2b$10$Zz9Sz3scUeDVkGm4Mi/ae.BQeiDuLUPAk5bdrWa7W/.Ga.LqYQfjW",
+      "id": 1
+    }
+  ]
 }

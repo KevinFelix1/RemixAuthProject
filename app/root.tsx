@@ -4,8 +4,6 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
-import { redirect } from "@remix-run/node";
-import { getSession, commitSession} from "~/utils/session.server";
 import {
   Link,
   Links,
@@ -16,8 +14,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import styles from "~/styles.css";
-import axios from "axios";
-import { Authenticator } from "./utils/auth.server";
+import Authenticator from "./utils/auth.server";
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -47,35 +44,9 @@ export function ErrorBoundary() {
 }
 
 export const action = async({request}: ActionFunctionArgs) => {
-  // const session = await getSession(
-  //   request.headers.get("Cookie")
-  // );
-  // const form = await request.formData();
-  // const email = form.get("email");
-  // const password = form.get("password");
-  
-  // const user = await axios.get(`http://localhost:4000/users?email=${email}`).then(response => response.data[0]);
-
-  // if (user === undefined) {
-  //   session.flash("error", "User not found");
-  //   // Redirect back to the login page with errors.
-  //   return redirect('/', {
-  //     headers: {
-  //       "Set-Cookie": await commitSession(session),
-  //     },
-  //   });
-  // };
-
-  // const token = await AuthenticateToken(user);
-  // session.set("authToken",token)
-  // return redirect("/dashboard", {
-  //   headers: {
-  //     "Set-Cookie": await commitSession(session),
-  //   },
-  // });
   return await Authenticator.authenticate(request, {
     failureRedirect: '/',
-    // successRedirect: '/dashboard'
+    successRedirect: '/dashboard'
   });
 }
 

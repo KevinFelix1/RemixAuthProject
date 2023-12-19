@@ -1,13 +1,17 @@
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
-import { Link, useLoaderData} from "@remix-run/react"
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import { Link, useLoaderData} from "@remix-run/react";
+import Authenticator from "~/utils/auth.server";
 
-export const loader = ({request}: LoaderFunctionArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
     return '';
 }
 
-export const action = ({request}: ActionFunctionArgs) => {
-    return '';
-}
+export const action = async ({request}: ActionFunctionArgs) => {
+    return await Authenticator.register(request, {
+        successRedirect: '/dashboard',
+        failureRedirect: '/new-user'
+    });
+};
 
 export default function Register() {
     const data = useLoaderData() as any;
@@ -15,13 +19,13 @@ export default function Register() {
     <div>
       <h1 className="title">Register to RemixAuthProject</h1>
       <div className="box">
-        <form className="form" method="POST" action="/">
+        <form className="form" method="POST" action="/new-user">
         <div className="box-input">
             {/* Email */}
             <label htmlFor="email">
               Name
             </label>
-            <input name="lastname" type="text" id="name" placeholder="Enter your name"/>
+            <input name="name" type="text" id="name" placeholder="Enter your name"/>
           </div>
           <div className="box-input">
             {/* Email */}
