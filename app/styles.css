@@ -12,7 +12,12 @@
     height: 500px;
     margin: 0 auto;
 }
-.form {
+.box > .answer {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+.box > .form {
     border: 1px dashed black;
     padding: 5px 10px;
     height: fit-content;

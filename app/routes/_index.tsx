@@ -1,6 +1,6 @@
 import type { MetaFunction,  ActionFunctionArgs,  LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, Link} from "@remix-run/react";
 import { getSession, commitSession} from "~/utils/session.server";
 
 export const meta: MetaFunction = () => {
@@ -46,6 +46,10 @@ export default function Index() {
           {data?.error && <div className="alert">{data?.error}</div>}
           <button className="submit" type="submit">Login</button>
         </form>
+        <div className="answer">
+          <p>dont have a account?</p>
+          <Link to="/new-user">Created one</Link>       
+        </div>
       </div>
     </div>
   );
