@@ -1,7 +1,11 @@
-import type { LoaderFunctionArgs } from "@remix-run/node"
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
 import { Link, useLoaderData} from "@remix-run/react"
 
 export const loader = ({request}: LoaderFunctionArgs) => {
+    return '';
+}
+
+export const action = ({request}: ActionFunctionArgs) => {
     return '';
 }
 
