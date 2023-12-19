@@ -10,7 +10,7 @@ type User = {
     password: string;
 };
 
-import { SessionStorage, redirect, json} from "@remix-run/node";
+import { SessionStorage, redirect, json, TypedResponse} from "@remix-run/node";
 import { sessionStorage } from "./session.server";
 import jwt from "jsonwebtoken";
 import axios from "axios";
@@ -33,7 +33,7 @@ class AuthEstrategy {
     async authenticate(
         request: Request,
         options: AuthRedirectOptions
-    ): Promise<any> {
+    ): Promise<TypedResponse> {
         const session = await this.session.getSession(
             request.headers.get("Cookie")
         );
@@ -70,8 +70,16 @@ class AuthEstrategy {
                 });
             };
         };
-        return user;
-    }
+        //set token in the session
+        const {name, lastname} = user;
+        const token = await `Bearer ${jwt.sign({email, name, lastname}, process.env.SECRETKEY as string, {expiresIn: "1h"})}`;
+        session.set("authToken", token);
+        return redirect("/dashboard", {
+            headers: {
+            "Set-Cookie": await this.session.commitSession(session),
+            },
+        });
+    };
 };
 
 export const Authenticator = new AuthEstrategy(sessionStorage);
