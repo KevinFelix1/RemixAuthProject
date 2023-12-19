@@ -1,5 +1,5 @@
 :root {
-    --alertColor: #ff0060;
+    --alertColor: #c60c0c;
     --submitColor: #ffbc66;
 }
 
@@ -33,6 +33,12 @@
     outline-color: blue;
     border-radius: 3px;
     border: 1px solid;
+}
+.form > .alert {
+    margin-bottom: 15px;
+    color: var(--alertColor);
+    height: 20px;
+    padding: 5px 0px;
 }
 .form > .submit {
     height: 35px;
