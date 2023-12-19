@@ -91,14 +91,42 @@ class AuthEstrategy {
         const email = form.get("email") as string;
         const password = await bcrypt.hash(form.get("password") as string, 10);
 
+        if(!name || !lastname || !email || !password) {
+            session.flash('error', "empty fields left");
+            if(typeof options.failureRedirect !== 'string') {
+                //Not failureRedirect
+                throw new Response("No existe redireccion", {status: 404})
+            } else {
+                throw redirect(options.failureRedirect, {
+                    headers: {
+                    "Set-Cookie": await this.session.commitSession(session),
+                    },
+                });
+            };
+        };
+
         const response = await axios.post("http://localhost:4000/users", {
             name,
             lastname,
             email,
             password
         }).then(response => response.data);
-        console.log(response);
-        return '';
+
+        if(!response) {
+            session.flash('error', "Ups! something error");
+            if(typeof options.failureRedirect !== 'string') {
+                //Not failureRedirect
+                throw new Response("No existe redireccion", {status: 404})
+            } else {
+                throw redirect(options.failureRedirect, {
+                    headers: {
+                    "Set-Cookie": await this.session.commitSession(session),
+                    },
+                });
+            };
+        };
+        if(typeof options.successRedirect !== 'string') throw new Response("no existe redireccion", {status: 404});
+        return redirect(options.successRedirect);
     };
 };
 

@@ -1,14 +1,24 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, useLoaderData} from "@remix-run/react";
+import { getSession, commitSession} from "~/utils/session.server";
 import Authenticator from "~/utils/auth.server";
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
-    return '';
+export const loader = async({request}: LoaderFunctionArgs) => {
+    const session = await getSession(
+      request.headers.get("Cookie")
+    );
+    const data = { error: session.get("error") };
+    return json(data, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
     return await Authenticator.register(request, {
-        successRedirect: '/dashboard',
+        successRedirect: '/',
         failureRedirect: '/new-user'
     });
 };
@@ -20,7 +30,7 @@ export default function Register() {
       <h1 className="title">Register to RemixAuthProject</h1>
       <div className="box">
         <form className="form" method="POST" action="/new-user">
-        <div className="box-input">
+          <div className="box-input">
             {/* Email */}
             <label htmlFor="email">
               Name
