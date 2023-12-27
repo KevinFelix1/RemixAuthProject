@@ -169,6 +169,19 @@ class AuthEstrategy {
         };
         return user;
     };
+
+    async logout(
+        request: Request,
+    ) {
+        const session = await this.session.getSession(
+            request.headers.get("Cookie")
+        );
+        return redirect("/", {
+            headers: {
+              "Set-Cookie": await this.session.destroySession(session),
+            },
+        });
+    }
 };
 
 const  Authenticator = new AuthEstrategy(sessionStorage);

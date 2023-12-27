@@ -1,4 +1,4 @@
-import type {LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type {LoaderFunctionArgs, MetaFunction, ActionFunctionArgs} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import Authenticator from "~/utils/auth.server";
 
@@ -15,6 +15,11 @@ export const loader = async({request}: LoaderFunctionArgs) => {
     });
     return user;
 }
+
+export const action = async({request}: ActionFunctionArgs) => {
+    return await Authenticator.logout(request);
+};
+
 export default function Dashboard() {
  const data: any = useLoaderData();
  return(
@@ -22,6 +27,8 @@ export default function Dashboard() {
         <p>Hello in dashboardPage protect</p>
         <p>You name is: {data?.name || 'Undefined'} {data?.lastname || 'Undefined'}</p>
         <p>Email: {data?.email || 'Undefined'}</p>
-        <button type="button">Logout</button>
+        <form method="POST">
+            <button type="submit">Logout</button>
+        </form>
     </div>
 )}
