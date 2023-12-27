@@ -6,6 +6,13 @@
       "email": "correo@correo.com",
       "password": "$2b$10$Zz9Sz3scUeDVkGm4Mi/ae.BQeiDuLUPAk5bdrWa7W/.Ga.LqYQfjW",
       "id": 1
+    },
+    {
+      "name": "Jacksenn",
+      "lastname": "Romero",
+      "email": "dominio@dominio.com",
+      "password": "$2b$10$fkFyFc.WznqXJw7Q71MeVuqJ/dSml3uav4aO0/tjKTLcucrI/05zS",
+      "id": 2
     }
   ]
 }

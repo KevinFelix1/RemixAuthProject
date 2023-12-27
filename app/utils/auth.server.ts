@@ -10,7 +10,7 @@ type User = {
     password: string;
 };
 
-import { SessionStorage, redirect, json, TypedResponse} from "@remix-run/node";
+import { SessionStorage, redirect, TypedResponse} from "@remix-run/node";
 import { sessionStorage } from "./session.server";
 import jwt from "jsonwebtoken";
 import axios from "axios";
@@ -127,6 +127,47 @@ class AuthEstrategy {
         };
         if(typeof options.successRedirect !== 'string') throw new Response("no existe redireccion", {status: 404});
         return redirect(options.successRedirect);
+    };
+
+    async isAutenticated(
+        request: Request,
+        options: AuthRedirectOptions
+    ) {
+        let user;
+        let session = await this.session.getSession(
+            request.headers.get("Cookie")
+        );
+        try {
+            const sessionValue: string = session.data?.authToken || '';
+            const token = sessionValue.replace("Bearer ", "");
+            user = jwt.verify(token, process.env.SECRETKEY as string);
+            if(!user) {
+                session.flash('error', "User not auth");
+                if(typeof options.failureRedirect !== 'string') {
+                        //Not failureRedirect
+                        throw new Response("No existe redireccion", {status: 404})
+                } else {
+                    throw redirect(options.failureRedirect, {
+                        headers: {
+                        "Set-Cookie": await this.session.commitSession(session),
+                        },
+                    });
+                };
+            };
+        } catch (error) {
+            session.flash('error', "User not auth");
+            if(typeof options.failureRedirect !== 'string') {
+                    //Not failureRedirect
+                    throw new Response("No existe redireccion", {status: 404})
+            } else {
+                throw redirect(options.failureRedirect, {
+                    headers: {
+                    "Set-Cookie": await this.session.commitSession(session),
+                    },
+                });
+            };
+        };
+        return user;
     };
 };
 

@@ -1,30 +1,27 @@
-import type {LoaderFunctionArgs} from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type {LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
-// import { isAuthenticated } from "~/utils/auth.server";
-import { getSession } from "~/utils/session.server";
+import Authenticator from "~/utils/auth.server";
+
+export const meta: MetaFunction = () => {
+    return [
+      { title: "lobby" },
+      { name: "description", content: "Welcome to your dashboardPage!" },
+    ];
+};
+
 export const loader = async({request}: LoaderFunctionArgs) => {
-    const session = await getSession(
-        request.headers.get("Cookie")
-    );
-    if (!session.has("authToken")) {
-        // Redirect to the home page if they are already signed in.
-        return redirect("/");
-    }
-
-    // const user = await isAuthenticated(request);
-    return '';
-
+    const user = await Authenticator.isAutenticated(request, {
+        failureRedirect: "/",
+    });
+    return user;
 }
 export default function Dashboard() {
- const data = useLoaderData();
- console.log(data);
+ const data: any = useLoaderData();
  return(
     <div>
         <p>Hello in dashboardPage protect</p>
-        <p>You name is: Undefined</p>
-        <p>Email: Undefined</p>
+        <p>You name is: {data?.name || 'Undefined'} {data?.lastname || 'Undefined'}</p>
+        <p>Email: {data?.email || 'Undefined'}</p>
         <button type="button">Logout</button>
     </div>
- )
-}
+)}
